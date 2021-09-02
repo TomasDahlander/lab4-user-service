@@ -54,7 +54,10 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     200 ok! perfekt men jag får inget svar tillbaka?
                     Kolla i loggarna, vi får ett läskigt fel som vi ska se till att lösa i uppgift 2
                  */
+                .antMatchers("/user/*").permitAll()
                 .antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll()
+                .antMatchers("/admin/*").hasRole("ADMIN")
+                .antMatchers("/customer/*").hasRole("CUSTOMER")
                 /*
                 TODO: Upppgift 4:
                     Arbeta med roller
@@ -117,7 +120,8 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 Du ska få "Du är inloggad!" som svar.
          */
-        auth.userDetailsService((s) -> null);
+        auth.userDetailsService((username) -> userRepo.findById(username).orElseThrow(() -> new UsernameNotFoundException(":(")))
+        .passwordEncoder(passwordEncoder);
     }
 
 }

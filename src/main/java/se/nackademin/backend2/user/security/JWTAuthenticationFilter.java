@@ -78,7 +78,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Kolla på resultatet.
          */
 
-        res.getWriter().write("Du är inloggad!");
+        User user = (User) auth.getPrincipal();
+
+        String token = jwtIssuer.generateToken(user);
+
+        res.getWriter().write(token);
         res.getWriter().flush();
 
 
